@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
 import requests
-import csv, time, sys, re
+import csv, sys, re
 import codecs
 from bs4 import BeautifulSoup
-import urllib
 
 # Globals
 row_counter = 1
