@@ -56,19 +56,20 @@ def process_names(name):
         print names_list
     # Handle multiple names up to three
     if len(names_list) > 1 and len(names_list) < 4:
-        # If this is the second trip, add names to columns
+        # If this is the first trip, add names to columns
         if trip_counter == 1:
             columns[row_counter][4] += names_list[0]
             columns[row_counter][6] += names_list[1]
             if len(names_list) > 2:
                 columns[row_counter][8] += names_list[2]
             return columns
-        # Otherwise, check for ISNI
+        # If this is the second trip, check for ISNI
         else:
             check_for_isni(names_list)
 
 def process_row(name, isni=None, notes=None):
     global columns, row_counter
+    # If this is the first trip, add all the required rows
     if trip_counter == 1:
         new_row = ['' for _ in columns[0]]
         columns += [new_row]
@@ -82,12 +83,12 @@ def process_row(name, isni=None, notes=None):
         webpage = process_webpage(notes) # Process webpage
         if webpage:
             columns[row_counter][3] += webpage
-    elif trip_counter == 2:
-        process_names(name) # Process names again
+    # If this is the second trip, just process names
+    else:
+        process_names(name)
     row_counter += 1 # Move on to next row
     return columns
 
-# Read rows
 def read_rows(reader):
     for row in enumerate(reader):
         name = row[1][0].strip()
@@ -97,7 +98,6 @@ def read_rows(reader):
             output = process_row(name, isni, notes)
     return output
 
-# Process the file
 def process_file(input_file):
     with open(input_file, 'rb') as name_csv:
         reader = csv.reader(name_csv)
@@ -105,7 +105,6 @@ def process_file(input_file):
         output = read_rows(reader)
     return output
 
-# Main function
 def main():
     global trip_counter, row_counter
     if len(sys.argv) > 1:
