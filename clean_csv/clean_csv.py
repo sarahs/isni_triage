@@ -31,7 +31,7 @@ def process_isni(isni, name):
     isni_xml = requests.get(uri)
     isni_xml_soup = BeautifulSoup(isni_xml.text, 'html.parser')
     isniuri = isni_xml_soup.isniuri.text
-    # Add to name dictionary to be used in second trip
+    # Add name/isni to dictionary for use in second trip
     if isniuri:
         name_dict[name] = str(isniuri)
         return str(isniuri)
